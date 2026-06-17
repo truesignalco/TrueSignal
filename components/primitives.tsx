@@ -175,7 +175,7 @@ export function WBar({ w = '100%', h = 10, light, style }: any) {
 // Stack of text bars to suggest a paragraph.
 // User feedback: removed — the gray placeholder bars read as visual clutter.
 // Kept as a no-op so call sites don't need to be touched.
-export function WPara() { return null; }
+export function WPara(props: any) { return null; }
 
 // Buttons
 export function WBtnPrimary({ children, mobile, href, onClick }: any) {
