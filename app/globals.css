@@ -1,0 +1,96 @@
+html, body, #root { margin: 0; padding: 0; height: 100%; }
+body { background: #f0eee9; font-family: 'DM Sans', system-ui, sans-serif; }
+
+.wire-root { font-family: 'DM Sans', system-ui, sans-serif; color: #2a2a2a; line-height: 1.4; }
+.wire-root .serif { font-family: 'Cormorant Garamond', 'EB Garamond', Georgia, serif; }
+.wire-root .hand { font-family: 'Caveat', 'Comic Sans MS', cursive; }
+.wire-root .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+/* shared bounding boxes for wireframes */
+.wb { border: 1.4px solid #2a2a2a; background: #fff; box-sizing: border-box; }
+.wb-soft { border: 1.2px solid #888; }
+.wb-dash { border-style: dashed; border-color: #888; }
+.wb-fill { background: #ececec; }
+.wb-fill-2 { background: #dcdcdc; }
+.wb-paper { background: #f7f5f2; }
+.wb-gray { background: #f2f2f2; }
+.wb-navy { background: #1a2235; color: #f3efe8; }
+.wb-accent { background: #c4622d; color: white; }
+
+/* small caps accent label */
+.wlabel { font-size: 11px; font-weight: 600; letter-spacing: 0.18em;
+          text-transform: uppercase; color: #c4622d; }
+.wlabel-dim { color: #888; }
+
+/* handwritten annotation marker */
+.wnote { font-family: 'Caveat', cursive; color: #c4622d;
+         font-size: 18px; line-height: 1.05; }
+.wnote-dim { color: #6b6b6b; }
+
+/* image / placeholder fills */
+.wimg { background:
+          repeating-linear-gradient(45deg, #e5e1d8 0 6px, #f0ece2 6px 12px); }
+.wimg-dark { background:
+          repeating-linear-gradient(45deg, #2a3548 0 6px, #1f283a 6px 12px); }
+
+/* text bars (paragraph-ish) — removed per user feedback (gray clutter).
+   Kept the class so cached/legacy renders don't break, but it paints
+   nothing. WPara also returns null now. */
+.wbar, .wbar-thick, .wbar-light { display: none !important; }
+
+/* divider rule */
+.wrule { border: 0; border-top: 1.2px solid #2a2a2a; }
+.wrule-thin { border-top: 1px solid #bbb; }
+.wrule-orange { border-top: 1.6px solid #c4622d; }
+
+/* full page wrapper */
+.wpage { width: 100%; min-height: 100%; }
+
+/* sketch mode (body.sketch) — hand-drawn wobble on borders + display type */
+body.sketch .wire-root .wb { border-color: #2a2a2a;
+    border-radius: 3px 8px 6px 5px / 6px 4px 8px 5px; }
+body.sketch .wire-root .wb-soft { border-color: #555; }
+body.sketch .wire-root .wbtn-primary,
+body.sketch .wire-root .wbtn-outline {
+    border-radius: 5px 18px 6px 14px / 14px 5px 18px 6px;
+}
+body.sketch .wire-root .serif,
+body.sketch .wire-root .display {
+    font-family: 'Caveat', cursive !important;
+    font-weight: 700 !important;
+    font-style: normal !important;
+    letter-spacing: 0 !important;
+}
+body.sketch .wire-root .serif em,
+body.sketch .wire-root .display em {
+    font-style: normal !important; color: #c4622d;
+}
+
+/* annotations layer — permanently hidden (these were dev directions, not content) */
+.wnote, .wnote-block { display: none !important; }
+
+/* buttons */
+.wbtn-primary { display: inline-flex; align-items: center; gap: 8px;
+    background: #c4622d; color: white; border: 0;
+    padding: 14px 22px; font-weight: 600; font-size: 14px;
+    font-family: inherit; cursor: pointer; }
+.wbtn-outline { display: inline-flex; align-items: center; gap: 8px;
+    background: transparent; color: #2a2a2a;
+    border: 1.4px solid #2a2a2a;
+    padding: 13px 22px; font-weight: 600; font-size: 14px;
+    font-family: inherit; cursor: pointer; }
+.wbtn-outline.on-dark { color: #f3efe8; border-color: #f3efe8; }
+
+.desktop-only { display: block; }
+.mobile-only { display: none; }
+.desktop-flex { display: flex; }
+.mobile-flex { display: none; }
+
+@media (max-width: 768px) {
+  .desktop-only { display: none; }
+  .mobile-only { display: block; }
+  .desktop-flex { display: none !important; }
+  .mobile-flex { display: flex !important; }
+  .site-nav { padding: 20px 20px !important; }
+  .nav-logo { height: 48px !important; }
+}
