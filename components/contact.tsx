@@ -166,7 +166,7 @@ export function ContactMobile() {
   return (
     <WireRoot>
       
-      <section style={{ background: WIRE_NAVY, color: '#f3efe8', padding: '160px 20px 48px' }}>
+      <section style={{ background: WIRE_NAVY, color: '#f3efe8', padding: '112px 20px 48px' }}>
         <WLabel style={{ color: WIRE_ACCENT }}>Let's Talk</WLabel>
         <div style={{ height: 16 }} />
         <h1 className="serif" style={{ fontSize: 36, fontWeight: 500, lineHeight: 1.05, margin: 0 }}>

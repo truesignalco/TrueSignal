@@ -16,7 +16,7 @@ export function AboutHeader({ mobile }: { mobile?: boolean }) {
   return (
     <section style={{
       background: WIRE_NAVY, color: '#f3efe8',
-      padding: mobile ? '160px 20px 56px' : '220px 80px 120px'
+      padding: mobile ? '112px 20px 56px' : '220px 80px 120px'
     }}>
       <WFade>
       <WLabel style={{ color: WIRE_ACCENT }}>About True Signal</WLabel>
