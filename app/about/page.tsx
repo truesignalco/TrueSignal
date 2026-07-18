@@ -4,6 +4,9 @@ import { client } from "../../sanity/lib/client";
 import { aboutPageQuery } from "../../sanity/lib/queries";
 import { projectId } from "../../sanity/env";
 
+export const revalidate = 0; // Forces Next.js to always fetch fresh data, making Sanity updates instant
+
+
 export default async function About() {
   let aboutPageData = undefined;
 
