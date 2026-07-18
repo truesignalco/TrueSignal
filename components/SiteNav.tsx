@@ -11,6 +11,8 @@ export function SiteNav({ dark = true }: { dark?: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
+  if (pathname?.startsWith('/studio')) return null;
+
   const isHomeInitial = isHomePage && !scrolled;
   
   // The links always stay light, but logo is dark initially on home page

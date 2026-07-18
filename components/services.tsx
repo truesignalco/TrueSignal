@@ -2,8 +2,7 @@
 // @ts-nocheck
 import React, { useState } from 'react';
 import { WireRoot, WNav, WNavMobile, WFooter, WLabel, WNoteBlock, WBtnPrimary, WBtnOutline, WIRE_ACCENT, WIRE_INK, WIRE_NAVY, WIRE_PAPER, WIRE_GRAY, WFade } from './primitives';
-import { StudyExamplesC, StudyExamplesMobile } from './study-examples';
-import { PartnerExpectB, PartnerExpectMobile } from './partner-expect';
+import { DynamicSection } from './dynamic-section';
 import Link from 'next/link';
 
 export const TIERS = [
@@ -103,9 +102,11 @@ export function ServicesBottomCTA({ mobile }: any) {
     </section>);
 }
 
-export function ServicesBDesktop({ activeIndex = 0 }: any) {
-  const active = TIERS[activeIndex];
-  const others = TIERS.filter((_, i) => i !== activeIndex);
+export function ServicesBDesktop({ activeKey, servicesData = TIERS }: any) {
+  const foundIndex = servicesData.findIndex((t: any) => t.key === activeKey);
+  const activeIndex = foundIndex >= 0 ? foundIndex : 0;
+  const active = servicesData[activeIndex];
+  const others = servicesData.filter((_: any, i: number) => i !== activeIndex);
   const deepenLabel = activeIndex === 0 ?
     'Most engagements deepen from here' :
     activeIndex === 1 ?
@@ -118,12 +119,11 @@ export function ServicesBDesktop({ activeIndex = 0 }: any) {
       'For one-off and project-scope work.';
   return (
     <WireRoot>
-
       <ServicesHeader />
       <section style={{ background: WIRE_PAPER, padding: '80px 80px 0' }}>
         <div style={{ display: 'flex', gap: 10, marginBottom: 56, flexWrap: 'wrap' }}>
-          {TIERS.map((t, i) =>
-            <button key={t.key} className="tab-pill" data-index={i} style={{
+          {servicesData.map((t: any, i: number) =>
+            <button key={t.key} className="tab-pill" data-key={t.key} style={{
               padding: '14px 24px', fontSize: 14, fontFamily: 'inherit', fontWeight: 600,
               border: i === activeIndex ? `1.4px solid ${WIRE_INK}` : '1.4px solid transparent',
               background: i === activeIndex ? WIRE_INK : 'transparent',
@@ -160,7 +160,7 @@ export function ServicesBDesktop({ activeIndex = 0 }: any) {
               <WLabel>{tierLabel(active)}</WLabel>
               <div style={{ height: 20 }} />
               <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 14 }}>
-                {active.deliverables.map((d, i) =>
+                {active.deliverables?.map((d: string, i: number) =>
                   <li key={d} style={{ display: 'grid', gridTemplateColumns: '32px 1fr', gap: 8, fontSize: 16, color: '#3d3d3d' }}>
                     <span className="mono" style={{ fontSize: 11, color: WIRE_ACCENT, letterSpacing: '0.15em' }}>0{i + 1}</span>{d}
                   </li>
@@ -173,8 +173,9 @@ export function ServicesBDesktop({ activeIndex = 0 }: any) {
           </div>
         </WFade>
       </section>
-      {activeIndex === 1 && <StudyExamplesC />}
-      {activeIndex === 2 && <PartnerExpectB />}
+      {active?.sections?.map((section: any, idx: number) => (
+        <DynamicSection key={idx} section={section} />
+      ))}
       <section style={{ background: WIRE_GRAY, padding: '64px 80px' }}>
         <WFade delay={0.1}>
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: 16 }}>
@@ -182,7 +183,7 @@ export function ServicesBDesktop({ activeIndex = 0 }: any) {
             <span className="serif" style={{ fontStyle: 'italic', color: '#666', fontSize: 16 }}>{deepenSub}</span>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, maxWidth: 1800, margin: '0 auto' }}>
-            {others.map((t, i) => {
+            {others.map((t: any, i: number) => {
               const highlight = activeIndex === 0 && t.key === 'study';
               return (
                 <div key={t.key} className="wb" style={{
@@ -204,7 +205,7 @@ export function ServicesBDesktop({ activeIndex = 0 }: any) {
                   <div className="serif" style={{ fontSize: 26, fontWeight: 500, lineHeight: 1.2, marginBottom: 14 }}>{t.headline}</div>
                   <p style={{ fontSize: 14, lineHeight: 1.55, color: highlight ? 'rgba(255,255,255,0.8)' : '#666', margin: 0 }}>{t.shortFit}</p>
                   <div style={{ height: 16 }} />
-                  <button className="tab-pill mono" data-index={TIERS.findIndex(tier => tier.key === t.key)} style={{
+                  <button className="tab-pill mono" data-key={t.key} style={{
                     background: 'none', border: 'none', padding: 0, fontSize: 12,
                     color: highlight ? 'white' : WIRE_ACCENT, letterSpacing: '0.15em', cursor: 'pointer'
                   }}>VIEW DETAILS →</button>
@@ -219,15 +220,15 @@ export function ServicesBDesktop({ activeIndex = 0 }: any) {
     </WireRoot>);
 }
 
-export function ServicesBDesktopInteractive() {
-  const [idx, setIdx] = useState(0);
+export function ServicesBDesktopInteractive({ servicesData }: any) {
+  const [activeKey, setActiveKey] = useState(servicesData?.[0]?.key || 'sprint');
   return (
     <div onClickCapture={(e) => {
       let el = e.target as any;
       while (el && el !== e.currentTarget) {
         if (el.tagName === 'BUTTON' && el.classList.contains('tab-pill')) {
-          const next = parseInt(el.getAttribute('data-index'), 10);
-          if (!isNaN(next) && next !== idx) setIdx(next);
+          const next = el.getAttribute('data-key');
+          if (next && next !== activeKey) setActiveKey(next);
           break;
         }
         el = el.parentElement;
@@ -235,25 +236,27 @@ export function ServicesBDesktopInteractive() {
     }} style={{ minHeight: '100%' }}>
       <style>{`.wbtn-primary, .wbtn-outline { cursor: pointer !important; }
               .wire-root button { cursor: pointer; }`}</style>
-      <ServicesBDesktop activeIndex={idx} />
+      <ServicesBDesktop 
+        activeKey={activeKey} 
+        servicesData={servicesData} 
+      />
     </div>);
 }
 
-export function ServicesBMobile({ activeIndex = 0 }: any) {
-  const active = TIERS[activeIndex];
+export function ServicesBMobile({ activeKey = 'sprint', servicesData = TIERS }: any) {
+  const active = servicesData.find((t: any) => t.key === activeKey) || servicesData[0];
   return (
     <WireRoot>
-
       <ServicesHeader mobile />
       <section style={{ background: WIRE_PAPER, padding: '32px 20px' }}>
         <WFade>
           <div style={{ display: 'flex', gap: 8, overflowX: 'auto', marginBottom: 32 }}>
-            {TIERS.map((t, i) =>
-              <button key={t.key} className="tab-pill" data-index={i} style={{
+            {servicesData.map((t: any) =>
+              <button key={t.key} className="tab-pill" data-key={t.key} style={{
                 padding: '10px 16px', fontSize: 12, fontFamily: 'inherit', fontWeight: 600,
-                border: '1.2px solid ' + (i === activeIndex ? WIRE_INK : '#bbb'),
-                background: i === activeIndex ? WIRE_INK : 'transparent',
-                color: i === activeIndex ? '#f3efe8' : WIRE_INK,
+                border: '1.2px solid ' + (t.key === activeKey ? WIRE_INK : '#bbb'),
+                background: t.key === activeKey ? WIRE_INK : 'transparent',
+                color: t.key === activeKey ? '#f3efe8' : WIRE_INK,
                 borderRadius: 999, whiteSpace: 'nowrap'
               }}>{t.label}</button>
             )}
@@ -268,7 +271,7 @@ export function ServicesBMobile({ activeIndex = 0 }: any) {
           <div className="wb wb-soft" style={{ padding: 18, background: '#fff' }}>
             <WLabel>{tierLabel(active)}</WLabel>
             <div style={{ height: 12 }} />
-            {active.deliverables.map((d, i) =>
+            {active.deliverables?.map((d: string, i: number) =>
               <div key={d} style={{ display: 'grid', gridTemplateColumns: '24px 1fr', gap: 6, fontSize: 14, padding: '4px 0' }}>
                 <span className="mono" style={{ fontSize: 10, color: WIRE_ACCENT, letterSpacing: '0.15em' }}>0{i + 1}</span>{d}
               </div>
@@ -279,31 +282,37 @@ export function ServicesBMobile({ activeIndex = 0 }: any) {
             <WLabel>Ideal for</WLabel>
             <p style={{ fontSize: 13, lineHeight: 1.55, margin: '6px 0 0', fontStyle: 'italic', color: '#3d3d3d' }}>{active.fit}</p>
           </div>
+          <div style={{ margin: '0 -20px' }}>
+            {active?.sections?.map((section: any, idx: number) => (
+              <DynamicSection key={idx} section={section} mobile={true} />
+            ))}
+          </div>
         </WFade>
       </section>
-      {activeIndex === 1 && <StudyExamplesMobile onNavy />}
-      {activeIndex === 2 && <PartnerExpectMobile />}
       <ResearchNote mobile />
       <ServicesBottomCTA mobile />
       <WFooter mobile />
     </WireRoot>);
 }
 
-export function ServicesBMobileInteractive() {
-  const [idx, setIdx] = useState(0);
+export function ServicesBMobileInteractive({ servicesData }: any) {
+  const [activeKey, setActiveKey] = useState(servicesData?.[0]?.key || 'sprint');
   return (
     <div onClickCapture={(e) => {
       let el = e.target as any;
       while (el && el !== e.currentTarget) {
         if (el.tagName === 'BUTTON' && el.classList.contains('tab-pill')) {
-          const next = parseInt(el.getAttribute('data-index'), 10);
-          if (!isNaN(next) && next !== idx) setIdx(next);
+          const next = el.getAttribute('data-key');
+          if (next && next !== activeKey) setActiveKey(next);
           break;
         }
         el = el.parentElement;
       }
     }} style={{ minHeight: '100%' }}>
       <style>{`.wire-root button { cursor: pointer; }`}</style>
-      <ServicesBMobile activeIndex={idx} />
+      <ServicesBMobile 
+        activeKey={activeKey} 
+        servicesData={servicesData} 
+      />
     </div>);
 }
