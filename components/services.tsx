@@ -184,7 +184,7 @@ export function ServicesBDesktop({ activeKey, servicesData = TIERS }: any) {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, maxWidth: 1800, margin: '0 auto' }}>
             {others.map((t: any, i: number) => {
-              const highlight = activeIndex === 0 && t.key === 'study';
+              const highlight = t.key === servicesData[activeIndex + 1]?.key;
               return (
                 <div key={t.key} className="wb" style={{
                   background: highlight ? WIRE_NAVY : '#fff',
