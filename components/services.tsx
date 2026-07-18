@@ -19,7 +19,7 @@ export const TIERS = [
   {
     key: 'study',
     label: 'Signal Study',
-    cadence: '6–12 weeks',
+    cadence: '6–12 weeks ',
     headline: "Comprehensive. Consumer grounded. Built to move the business.",
     description: "For the questions that require real depth. A Signal Study goes end-to-end — from stakeholder interviews and research to strategic frameworks and leadership presentations.",
     deliverables: ["Strategic Insight deck — The consumer read", "Consumer grounded framework — Your strategic North Star", "Leadership ready presentation — The room gets it and moves", "Activation recommendations — What to do next, and why"],
@@ -236,9 +236,9 @@ export function ServicesBDesktopInteractive({ servicesData }: any) {
     }} style={{ minHeight: '100%' }}>
       <style>{`.wbtn-primary, .wbtn-outline { cursor: pointer !important; }
               .wire-root button { cursor: pointer; }`}</style>
-      <ServicesBDesktop 
-        activeKey={activeKey} 
-        servicesData={servicesData} 
+      <ServicesBDesktop
+        activeKey={activeKey}
+        servicesData={servicesData}
       />
     </div>);
 }
@@ -310,9 +310,9 @@ export function ServicesBMobileInteractive({ servicesData }: any) {
       }
     }} style={{ minHeight: '100%' }}>
       <style>{`.wire-root button { cursor: pointer; }`}</style>
-      <ServicesBMobile 
-        activeKey={activeKey} 
-        servicesData={servicesData} 
+      <ServicesBMobile
+        activeKey={activeKey}
+        servicesData={servicesData}
       />
     </div>);
 }
